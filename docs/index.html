@@ -17,8 +17,9 @@
       </div>
       <h1 class="header-title">Boka din intervjutid</h1>
       <p class="header-lead">Välj en ledig tid. Intervjun är 15 minuter på vårt kontor – du behöver inte förbereda något. Ingen annan ser vem som bokat vad.</p>
+      <div class="seg" id="day-seg" role="radiogroup" aria-label="Välj dag"></div>
       <div class="header-tags">
-        <span class="tag tag-neutral" id="date-tag">Fredag 4 september</span>
+        <span class="tag tag-neutral" id="date-tag"></span>
         <span class="tag tag-neutral" id="window-tag">09.00 – 12.00</span>
         <span class="tag tag-outline" id="free-tag"></span>
       </div>
@@ -84,7 +85,7 @@
       </div>
       <table class="table">
         <thead>
-          <tr><th>Tid</th><th>Kandidat</th><th>Nr</th><th></th></tr>
+          <tr><th>Dag</th><th>Tid</th><th>Kandidat</th><th>Nr</th><th></th></tr>
         </thead>
         <tbody id="admin-rows"></tbody>
       </table>

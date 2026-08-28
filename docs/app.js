@@ -1,25 +1,34 @@
 (() => {
   'use strict';
 
-  // ---- schedule (09.00–12.00, 15 min interviews, 15 min gap → 6 slots) ----
+  // ---- schedule (09.00–12.00, 15 min interviews, 15 min gap → 6 slots/day) ----
   const SLOT_MINUTES = 15;
   const BUFFER_MINUTES = 15;
   const START = 9 * 60;
   const END = 12 * 60;
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
+  const DAYS = [
+    { key: '0902', full: 'Onsdag 2 september', short: 'Ons 2/9' },
+    { key: '0904', full: 'Fredag 4 september', short: 'Fre 4/9' },
+  ];
+
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
   const hhmm = (m) => pad(Math.floor(m / 60)) + '.' + pad(m % 60);
 
-  function buildSlots() {
+  function buildDaySlots(day) {
     const out = [];
     for (let t = START; t + SLOT_MINUTES <= END; t += SLOT_MINUTES + BUFFER_MINUTES) {
-      out.push({ id: 's' + t, start: hhmm(t), end: hhmm(t + SLOT_MINUTES) });
+      out.push({ id: day.key + '-s' + t, day: day.key, start: hhmm(t), end: hhmm(t + SLOT_MINUTES) });
     }
     return out;
   }
-  const SLOTS = buildSlots();
+  const ALL_SLOTS = DAYS.flatMap(buildDaySlots);
+  const currentSlots = () => ALL_SLOTS.filter((d) => d.day === state.day);
+  const findSlot = (id) => ALL_SLOTS.find((d) => d.id === id);
+  const dayOf = (d) => DAYS.find((x) => x.key === d.day);
   const label = (d) => d.start + ' – ' + d.end;
+  const fullLabel = (d) => dayOf(d).short + ', ' + label(d);
 
   // ---- supabase ----
   const cfg = window.NEXER_CONFIG || {};
@@ -30,6 +39,7 @@
   // ---- state ----
   const state = {
     view: 'list', // list | form | confirm | gate | admin
+    day: DAYS[0].key,
     bookedSlotIds: new Set(),
     picked: null,
     name: '',
@@ -147,9 +157,9 @@
   }
 
   function copyList() {
-    const text = SLOTS.map((d) => {
+    const text = ALL_SLOTS.map((d) => {
       const b = state.adminData ? state.adminData[d.id] : null;
-      return label(d) + '\t' + (b ? b.name + '\t' + b.code : 'ledig');
+      return dayOf(d).short + '\t' + label(d) + '\t' + (b ? b.name + '\t' + b.code : 'ledig');
     }).join('\n');
     try { navigator.clipboard.writeText(text); } catch (e) {}
     state.copied = true;
@@ -161,19 +171,41 @@
   const els = {};
   function cacheEls() {
     ['view-list', 'view-form', 'view-confirm', 'view-gate', 'view-admin',
-      'free-tag', 'my-booking-slot', 'slots',
+      'day-seg', 'date-tag', 'free-tag', 'my-booking-slot', 'slots',
       'form-picked-time', 'form-submit-time', 'cand-name', 'form-error',
       'confirm-time', 'confirm-name', 'confirm-code',
       'admin-pw', 'gate-error',
       'admin-count', 'admin-rows', 'admin-copy'].forEach((id) => { els[id] = document.getElementById(id); });
   }
 
+  function buildDaySeg() {
+    els['day-seg'].innerHTML = '';
+    DAYS.forEach((day) => {
+      const opt = document.createElement('label');
+      opt.className = 'seg-opt';
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'day';
+      input.value = day.key;
+      input.checked = day.key === state.day;
+      input.addEventListener('change', () => {
+        state.day = day.key;
+        state.picked = null;
+        render();
+      });
+      opt.append(input, document.createTextNode(day.short));
+      els['day-seg'].appendChild(opt);
+    });
+  }
+
   function render() {
     ['list', 'form', 'confirm', 'gate', 'admin'].forEach((v) => {
       els['view-' + v].hidden = state.view !== v;
     });
+    els['day-seg'].hidden = state.view !== 'list';
 
-    const free = SLOTS.filter((d) => !state.bookedSlotIds.has(d.id)).length;
+    els['date-tag'].textContent = DAYS.find((d) => d.key === state.day).full;
+    const free = currentSlots().filter((d) => !state.bookedSlotIds.has(d.id)).length;
     els['free-tag'].textContent = free === 0 ? 'Alla tider bokade' : free === 1 ? '1 tid kvar' : free + ' tider kvar';
 
     if (state.view === 'list') renderList();
@@ -186,7 +218,7 @@
   function renderList() {
     els['my-booking-slot'].innerHTML = '';
     if (state.mine) {
-      const mySlot = SLOTS.find((d) => d.id === state.mine.slot);
+      const mySlot = findSlot(state.mine.slot);
       const card = document.createElement('div');
       card.className = 'card elev-sm my-booking-card';
       const kicker = document.createElement('span');
@@ -194,7 +226,7 @@
       kicker.textContent = 'Din bokning';
       const time = document.createElement('span');
       time.className = 'my-booking-time';
-      time.textContent = mySlot ? label(mySlot) : '';
+      time.textContent = mySlot ? fullLabel(mySlot) : '';
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'btn btn-ghost';
@@ -206,7 +238,7 @@
     }
 
     els.slots.innerHTML = '';
-    SLOTS.forEach((d) => {
+    currentSlots().forEach((d) => {
       const isMine = !!(state.mine && state.mine.slot === d.id);
       const booked = state.bookedSlotIds.has(d.id);
       const disabled = booked && !isMine;
@@ -254,8 +286,8 @@
   }
 
   function renderForm() {
-    const picked = SLOTS.find((d) => d.id === state.picked);
-    els['form-picked-time'].textContent = picked ? label(picked) : '';
+    const picked = findSlot(state.picked);
+    els['form-picked-time'].textContent = picked ? fullLabel(picked) : '';
     els['form-submit-time'].textContent = picked ? picked.start : '';
     if (document.activeElement !== els['cand-name']) els['cand-name'].value = state.name;
     els['form-error'].hidden = !state.error;
@@ -263,8 +295,8 @@
   }
 
   function renderConfirm() {
-    const mySlot = state.mine ? SLOTS.find((d) => d.id === state.mine.slot) : null;
-    els['confirm-time'].textContent = mySlot ? label(mySlot) : '';
+    const mySlot = state.mine ? findSlot(state.mine.slot) : null;
+    els['confirm-time'].textContent = mySlot ? fullLabel(mySlot) : '';
     els['confirm-name'].textContent = state.mine ? state.mine.name : '';
     els['confirm-code'].textContent = state.mine ? state.mine.code : '';
   }
@@ -278,9 +310,12 @@
   function renderAdmin() {
     els['admin-count'].textContent = 'Adminvy · ' + state.bookedSlotIds.size + ' bokade';
     els['admin-rows'].innerHTML = '';
-    SLOTS.forEach((d) => {
+    ALL_SLOTS.forEach((d) => {
       const b = state.adminData ? state.adminData[d.id] : null;
       const tr = document.createElement('tr');
+      const tdDay = document.createElement('td');
+      tdDay.className = 'admin-time';
+      tdDay.textContent = dayOf(d).short;
       const tdTime = document.createElement('td');
       tdTime.className = 'admin-time';
       tdTime.textContent = label(d);
@@ -299,7 +334,7 @@
         delBtn.addEventListener('click', () => deleteBooking(d.id, b.code, b.name));
         tdAction.appendChild(delBtn);
       }
-      tr.append(tdTime, tdName, tdCode, tdAction);
+      tr.append(tdDay, tdTime, tdName, tdCode, tdAction);
       els['admin-rows'].appendChild(tr);
     });
     els['admin-copy'].textContent = state.copied ? 'Kopierat ✓' : 'Kopiera listan';
@@ -328,6 +363,7 @@
   // ---- boot ----
   document.addEventListener('DOMContentLoaded', () => {
     cacheEls();
+    buildDaySeg();
     bindEvents();
     render();
     refreshSlots();
