@@ -132,6 +132,7 @@ img { display: block; max-width: 100%; }
 .seg {
   display: inline-flex; overflow: hidden; align-self: flex-start;
   border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 .seg-opt {
   display: inline-flex; align-items: center; gap: 6px;
