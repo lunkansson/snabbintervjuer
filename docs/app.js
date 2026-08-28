@@ -309,6 +309,7 @@
     document.getElementById('gate-cancel').addEventListener('click', () => { state.pw = ''; state.pwError = ''; state.view = 'list'; render(); });
 
     document.getElementById('admin-back').addEventListener('click', () => { state.view = 'list'; state.adminPassword = null; render(); });
+    document.getElementById('confirm-back').addEventListener('click', () => { state.view = 'list'; render(); });
     els['admin-copy'].addEventListener('click', copyList);
 
     document.getElementById('footer-admin').addEventListener('click', () => { state.pw = ''; state.pwError = ''; state.view = 'gate'; render(); });
