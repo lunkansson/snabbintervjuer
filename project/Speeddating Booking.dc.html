@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-96f55af4-d4de-4a6e-95bd-0b47735a4aac/styles.css">
+<script src="_ds/nocturne-96f55af4-d4de-4a6e-95bd-0b47735a4aac/_ds_bundle.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: var(--color-bg); }
+  a:hover { color: var(--color-accent-300); }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); display: flex; justify-content: center; padding: 0 var(--space-4) 64px;">
+  <div style="width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: var(--space-8);">
+
+    <header style="padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3);">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);">
+        
+        <img src="assets/nexer-logo.png" alt="Nexer" style="flex: none; width: 462px; height: 162px; display: block"><h6 style="margin: 0; font-size: 13px; letter-spacing: 0.1em; color: var(--color-accent-500);">Rekryteringsförmiddag</h6>
+      </div>
+      <h1 style="margin: 0; font-size: 34px;">Boka din intervjutid</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 1.55; color: color-mix(in srgb, var(--color-text) 72%, transparent); text-wrap: pretty;">Välj en ledig tid. Intervjun är 15 minuter på vårt kontor – du behöver inte förbereda något. Ingen annan ser vem som bokat vad.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1);">
+        <span class="tag tag-neutral">Fredag 4 september</span>
+        <span class="tag tag-neutral">09.00 – 12.00</span>
+        <span class="tag tag-outline">{{ freeLabel }}</span>
+      </div>
+    </header>
+
+    <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+
+        <sc-if value="{{ hasBooking }}" hint-placeholder-val="{{ false }}">
+          <div class="card elev-sm" style="gap: var(--space-2); border: 1px solid var(--color-accent-700);">
+            <span class="card-kicker">Din bokning</span>
+            <span style="font-size: 20px; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-variant-numeric: tabular-nums;">{{ myTimeLabel }}</span>
+            <button class="btn btn-ghost" onClick="{{ goMine }}" style="align-self: flex-start; min-height: 44px;">Visa bekräftelsen</button>
+          </div>
+        </sc-if>
+
+        <h6 style="margin: var(--space-2) 0 0; color: color-mix(in srgb, var(--color-text) 60%, transparent);">Tider</h6>
+
+        <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="6">
+          <div class="card elev-sm" style="flex-direction: row; align-items: center; gap: var(--space-4); padding: var(--space-4);">
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 92px;">
+              <span style="font-size: 20px; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-variant-numeric: tabular-nums; color: {{ slot.timeColor }};">{{ slot.start }}</span>
+              <span style="font-size: 11px; letter-spacing: 0.04em; color: color-mix(in srgb, var(--color-text) 50%, transparent); font-variant-numeric: tabular-nums;">till {{ slot.end }}</span>
+            </div>
+            <span style="flex: 1; font-size: 13px; color: {{ slot.statusColor }};">{{ slot.statusLabel }}</span>
+            <button class="btn {{ slot.btnClass }}" onClick="{{ slot.onPick }}" disabled="{{ slot.disabled }}" style="min-height: 44px; padding-inline: var(--space-6); white-space: nowrap;">{{ slot.btnLabel }}</button>
+          </div>
+        </sc-for>
+
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: var(--space-4); animation: riseIn 0.24s ease both;">
+        <button class="btn btn-ghost" onClick="{{ goList }}" style="align-self: flex-start; min-height: 44px;">← Andra tider</button>
+        <div class="card elev-md" style="gap: var(--space-4); padding: var(--space-6);">
+          <div style="display: flex; flex-direction: column; gap: var(--space-1);">
+            <span class="card-kicker">Vald tid</span>
+            <h2 style="margin: 0; font-size: 28px; font-variant-numeric: tabular-nums;">{{ pickedTimeLabel }}</h2>
+          </div>
+          <div class="field">
+            <label for="cand-name">Ditt namn</label>
+            <input class="input" id="cand-name" value="{{ fName }}" onChange="{{ hName }}" placeholder="För- och efternamn" style="min-height: 44px; font-size: 16px;">
+          </div>
+          <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: 0; font-size: 13px; color: var(--color-accent-300);">{{ error }}</p>
+          </sc-if>
+          <button class="btn btn-primary btn-block" onClick="{{ submit }}" style="min-height: 48px; font-size: 15px;">Boka {{ pickedShort }}</button>
+          <p style="margin: 0; font-size: 11.5px; line-height: 1.5; color: color-mix(in srgb, var(--color-text) 50%, transparent);">Ditt namn används bara för schemat den här förmiddagen och raderas efteråt.</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ false }}">
+      <div class="card elev-md" style="gap: var(--space-4); padding: var(--space-6); animation: riseIn 0.24s ease both;">
+        <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <div style="width: 34px; height: 34px; flex: none; border-radius: 50%; border: 1px solid var(--color-accent); color: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 16px;">✓</div>
+          <h2 style="margin: 0; font-size: 26px;">Tiden är din</h2>
+        </div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.55; color: color-mix(in srgb, var(--color-text) 72%, transparent);">Kom till receptionen några minuter innan och säg att du är här för speeddating. Ta gärna en skärmdump av den här sidan.</p>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4) 0; border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider);">
+          <div style="display: flex; justify-content: space-between; gap: var(--space-4); font-size: 14px;"><span style="color: color-mix(in srgb, var(--color-text) 55%, transparent);">Tid</span><strong style="font-weight: 500; font-variant-numeric: tabular-nums;">{{ myTimeLabel }}</strong></div>
+          <div style="display: flex; justify-content: space-between; gap: var(--space-4); font-size: 14px;"><span style="color: color-mix(in srgb, var(--color-text) 55%, transparent);">Namn</span><strong style="font-weight: 500;">{{ myName }}</strong></div>
+          <div style="display: flex; justify-content: space-between; gap: var(--space-4); font-size: 14px;"><span style="color: color-mix(in srgb, var(--color-text) 55%, transparent);">Bokningsnummer</span><strong style="font-weight: 500; font-variant-numeric: tabular-nums; color: var(--color-accent-300);">{{ myCode }}</strong></div>
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-secondary" onClick="{{ goList }}" style="flex: 1; min-height: 44px;">Byt tid</button>
+          <button class="btn btn-secondary" onClick="{{ cancel }}" style="flex: 1; min-height: 44px;">Avboka</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGate }}" hint-placeholder-val="{{ false }}">
+      <div class="card elev-md" style="gap: var(--space-4); padding: var(--space-6); animation: riseIn 0.24s ease both;">
+        <div style="display: flex; flex-direction: column; gap: var(--space-1);">
+          <span class="card-kicker">Internt</span>
+          <h2 style="margin: 0; font-size: 24px;">Ange lösenord</h2>
+        </div>
+        <div class="field">
+          <label for="admin-pw">Lösenord</label>
+          <input class="input" id="admin-pw" type="password" value="{{ pw }}" onChange="{{ hPw }}" onKeyDown="{{ onPwKey }}" placeholder="••••••••" style="min-height: 44px; font-size: 16px;" />
+        </div>
+        <sc-if value="{{ hasPwError }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 13px; color: var(--color-accent-300);">{{ pwError }}</p>
+        </sc-if>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-primary" onClick="{{ unlock }}" style="flex: 1; min-height: 46px;">Öppna adminvyn</button>
+          <button class="btn btn-ghost" onClick="{{ goList }}" style="min-height: 46px;">Avbryt</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4);">
+          <h6 style="margin: 0; color: color-mix(in srgb, var(--color-text) 60%, transparent);">Adminvy · {{ bookedCount }} bokade</h6>
+          <button class="btn btn-ghost" onClick="{{ goList }}" style="min-height: 44px;">Tillbaka</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr><th>Tid</th><th>Kandidat</th><th>Nr</th></tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ adminRows }}" as="row" hint-placeholder-count="6">
+              <tr>
+                <td style="font-variant-numeric: tabular-nums; white-space: nowrap;">{{ row.time }}</td>
+                <td style="color: {{ row.nameColor }};">{{ row.name }}</td>
+                <td style="font-variant-numeric: tabular-nums; color: color-mix(in srgb, var(--color-text) 55%, transparent);">{{ row.code }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <button class="btn btn-secondary" onClick="{{ copyList }}" style="align-self: flex-start; min-height: 44px;">{{ copyLabel }}</button>
+      </div>
+    </sc-if>
+
+    <footer style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); font-size: 12px; color: color-mix(in srgb, var(--color-text) 50%, transparent);">
+      <span></span>
+      <button class="btn btn-ghost" onClick="{{ goAdmin }}" style="font-size: 12px; min-height: 44px;">För oss</button>
+    </footer>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:900},&quot;slotMinutes&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:15,&quot;tsType&quot;:&quot;number&quot;,&quot;options&quot;:[15,20,30],&quot;section&quot;:&quot;Schema&quot;},&quot;bufferMinutes&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:15,&quot;tsType&quot;:&quot;number&quot;,&quot;options&quot;:[0,5,10,15],&quot;section&quot;:&quot;Schema&quot;}}">
+const KEY = 'nexer-speeddating-v2';
+const pad = n => (n < 10 ? '0' + n : '' + n);
+const hhmm = m => pad(Math.floor(m / 60)) + '.' + pad(m % 60);
+const MUTED = 'color-mix(in srgb, var(--color-text) 50%, transparent)';
+
+class Component extends DCLogic {
+  state = { view: 'list', picked: null, bookings: {}, mine: null, name: '', error: '', copied: false, pw: '', pwError: '' };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        this.setState({ bookings: d.bookings || {}, mine: d.mine || null });
+      }
+    } catch (e) {}
+  }
+
+  persist(bookings, mine) {
+    try { localStorage.setItem(KEY, JSON.stringify({ bookings, mine })); } catch (e) {}
+  }
+
+  // 09.00–12.00, one interview at a time, with an empty buffer between each.
+  slotDefs() {
+    const len = Number(this.props.slotMinutes ?? 15);
+    const gap = Number(this.props.bufferMinutes ?? 15);
+    const START = 9 * 60, END = 12 * 60;
+    const out = [];
+    for (let t = START; t + len <= END; t += len + gap) {
+      out.push({ id: 's' + t, start: hhmm(t), end: hhmm(t + len) });
+    }
+    return out;
+  }
+
+  submit = () => {
+    const name = this.state.name.trim();
+    if (name.length < 2) return this.setState({ error: 'Fyll i ditt namn så vi vet vem vi möter.' });
+    const { bookings, mine, picked } = this.state;
+    const next = {};
+    Object.keys(bookings).forEach(k => { if (!mine || bookings[k].code !== mine.code) next[k] = bookings[k]; });
+    if (next[picked]) return this.setState({ error: 'Någon hann före på den tiden – välj en annan.' });
+    const code = 'NX-' + (1000 + Math.floor(Math.random() * 9000));
+    next[picked] = { name, code };
+    const m = { code, slot: picked, name };
+    this.persist(next, m);
+    this.setState({ bookings: next, mine: m, view: 'confirm', error: '' });
+  };
+
+  cancel = () => {
+    const { bookings, mine } = this.state;
+    const next = {};
+    Object.keys(bookings).forEach(k => { if (bookings[k].code !== mine.code) next[k] = bookings[k]; });
+    this.persist(next, null);
+    this.setState({ bookings: next, mine: null, view: 'list', name: '' });
+  };
+
+  copyList = () => {
+    const defs = this.slotDefs(), b = this.state.bookings;
+    const text = defs.map(d => d.start + '–' + d.end + '\t' + (b[d.id] ? b[d.id].name + '\t' + b[d.id].code : 'ledig')).join('\n');
+    try { navigator.clipboard.writeText(text); } catch (e) {}
+    this.setState({ copied: true });
+    setTimeout(() => this.setState({ copied: false }), 2000);
+  };
+
+  renderVals() {
+    const s = this.state;
+    const defs = this.slotDefs();
+    const mySlot = s.mine ? defs.find(d => d.id === s.mine.slot) : null;
+    const picked = defs.find(d => d.id === s.picked);
+    const label = d => d.start + ' – ' + d.end;
+    const free = defs.filter(d => !s.bookings[d.id]).length;
+
+    return {
+      isList: s.view === 'list', isForm: s.view === 'form', isConfirm: s.view === 'confirm', isAdmin: s.view === 'admin',
+      isGate: s.view === 'gate',
+      pw: s.pw, pwError: s.pwError, hasPwError: !!s.pwError,
+      hPw: e => this.setState({ pw: e.target.value, pwError: '' }),
+      unlock: () => this.state.pw.trim() === 'starforlife2005'
+        ? this.setState({ view: 'admin', pw: '', pwError: '' })
+        : this.setState({ pwError: 'Fel lösenord.' }),
+      onPwKey: e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); this.setState(st => st.pw.trim() === 'starforlife2005' ? { view: 'admin', pw: '', pwError: '' } : { pwError: 'Fel lösenord.' }); } },
+      slots: defs.map(d => {
+        const isMine = s.mine && s.mine.slot === d.id;
+        const booked = !!s.bookings[d.id];
+        return {
+          start: d.start, end: d.end,
+          timeColor: booked && !isMine ? MUTED : 'var(--color-text)',
+          statusLabel: isMine ? 'Din tid' : booked ? 'Bokad' : 'Ledig',
+          statusColor: isMine ? 'var(--color-accent-300)' : booked ? MUTED : 'color-mix(in srgb, var(--color-text) 72%, transparent)',
+          btnClass: booked && !isMine ? 'btn-secondary' : 'btn-primary',
+          btnLabel: isMine ? 'Din' : booked ? 'Upptagen' : 'Välj',
+          disabled: booked && !isMine,
+          onPick: booked && !isMine ? () => {} : () => this.setState({ view: isMine ? 'confirm' : 'form', picked: d.id, error: '' })
+        };
+      }),
+      freeLabel: free === 0 ? 'Alla tider bokade' : free === 1 ? '1 tid kvar' : free + ' tider kvar',
+      hasBooking: !!s.mine,
+      myTimeLabel: mySlot ? label(mySlot) : '',
+      myName: s.mine ? s.mine.name : '',
+      myCode: s.mine ? s.mine.code : '',
+      pickedTimeLabel: picked ? label(picked) : '',
+      pickedShort: picked ? picked.start : '',
+      fName: s.name,
+      hName: e => this.setState({ name: e.target.value, error: '' }),
+      error: s.error, hasError: !!s.error,
+      submit: this.submit, cancel: this.cancel, copyList: this.copyList,
+      copyLabel: s.copied ? 'Kopierat ✓' : 'Kopiera listan',
+      goList: () => this.setState({ view: 'list' }),
+      goMine: () => this.setState({ view: 'confirm' }),
+      goAdmin: () => this.setState({ view: 'gate', pw: '', pwError: '' }),
+      bookedCount: defs.length - free,
+      adminRows: defs.map(d => {
+        const p = s.bookings[d.id];
+        return { time: label(d), name: p ? p.name : 'ledig', nameColor: p ? 'var(--color-text)' : MUTED, code: p ? p.code : '–' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

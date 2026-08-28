@@ -1,0 +1,276 @@
+/* Nocturne — design-system tokens and component classes.
+   Copied verbatim from the Claude Design export
+   (project/_ds/nocturne-96f55af4-d4de-4a6e-95bd-0b47735a4aac/styles.css) —
+   this file is plain CSS with no build step, so it's reused as-is. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-bg: #161826;
+  --color-surface: #232532;
+  --color-text: #e9e9ed;
+  --color-accent: #9184d9;
+  --color-accent-2: #a7a1db;
+  --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
+
+  --color-neutral-100: #f3f5fe;
+  --color-neutral-200: #e4e7f5;
+  --color-neutral-300: #cfd3e5;
+  --color-neutral-400: #b2b6ca;
+  --color-neutral-500: #9397ab;
+  --color-neutral-600: #75798c;
+  --color-neutral-700: #595d6c;
+  --color-neutral-800: #3f424d;
+  --color-neutral-900: #292b31;
+
+  --color-accent-100: #f5f4ff;
+  --color-accent-200: #e7e5fe;
+  --color-accent-300: #d2cefd;
+  --color-accent-400: #b5abfc;
+  --color-accent-500: #968ae0;
+  --color-accent-600: #796cbf;
+  --color-accent-700: #5d5294;
+  --color-accent-800: #423a6a;
+  --color-accent-900: #2b2741;
+
+  --color-accent-2-100: #f5f4ff;
+  --color-accent-2-200: #e7e5fe;
+  --color-accent-2-300: #d2cefd;
+  --color-accent-2-400: #b5afe8;
+  --color-accent-2-500: #9690c9;
+  --color-accent-2-600: #7972a9;
+  --color-accent-2-700: #5c5783;
+  --color-accent-2-800: #423e5d;
+  --color-accent-2-900: #2b293a;
+
+  --color-section: #262a60;
+  --color-section-glow: #353b80;
+  --color-section-ghost: #4c5397;
+
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-heading-weight: 500;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --space-1: 2.8px;
+  --space-2: 5.6px;
+  --space-3: 8.4px;
+  --space-4: 11.2px;
+  --space-6: 16.8px;
+  --space-8: 22.4px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 0 0 1px #3f424d;
+  --shadow-md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0,0,0,0.55);
+  --shadow-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0,0,0,0.65);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+}
+h1 { font-size: 42px; }
+h2 { font-size: 32px; }
+h3 { font-size: 25px; }
+h4 { font-size: 20px; }
+h5 { font-size: 16px; }
+h6 { font-size: 13px; }
+h6 { letter-spacing: 0.08em; text-transform: uppercase; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--color-accent); text-underline-offset: 3px; }
+img { display: block; max-width: 100%; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+/* — buttons — */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 14px; line-height: 1.2; color: var(--color-text);
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg { display: block; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
+.btn-primary:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+.btn-primary:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-block { width: 100%; margin-top: var(--space-2); }
+
+/* — forms — */
+.field > label {
+  display: block; font-size: 12px; margin-bottom: 5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.input {
+  width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+
+/* — cards — */
+.card {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface);
+}
+.card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+.elev-sm { box-shadow: var(--shadow-sm); }
+.elev-md { box-shadow: var(--shadow-md); }
+
+/* — tags — */
+.tag {
+  display: inline-flex; align-items: center; font-size: 11px;
+  letter-spacing: 0.02em; padding: 3px 10px;
+  border-radius: calc(var(--radius-md) * 0.75);
+}
+.tag-neutral { background: var(--color-neutral-800); color: var(--color-neutral-100); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+/* — tables — */
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th {
+  text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  padding: var(--space-2); border-bottom: 1px solid transparent;
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid transparent;
+}
+.table thead tr {
+  background: linear-gradient(to right,
+    transparent, var(--color-divider) 48px,
+    var(--color-divider) calc(100% - 48px), transparent) no-repeat bottom / 100% 1px;
+}
+.table tbody tr {
+  background: linear-gradient(to right,
+    transparent, color-mix(in srgb, var(--color-text) 8%, transparent) 48px,
+    color-mix(in srgb, var(--color-text) 8%, transparent) calc(100% - 48px), transparent) no-repeat bottom / 100% 1px;
+}
+.table tbody tr:hover {
+  background:
+    linear-gradient(color-mix(in srgb, var(--color-text) 4%, transparent),
+                    color-mix(in srgb, var(--color-text) 4%, transparent)) no-repeat 0 0 / 100% 100%,
+    linear-gradient(to right,
+      transparent, color-mix(in srgb, var(--color-text) 8%, transparent) 48px,
+      color-mix(in srgb, var(--color-text) 8%, transparent) calc(100% - 48px), transparent) no-repeat bottom / 100% 1px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Page — Nexer speeddating booking (translated from the .dc.html prototype's
+   inline styles into real classes; values are the same tokens/numbers).
+   ══════════════════════════════════════════════════════════════════════ */
+
+html, body { margin: 0; padding: 0; background: var(--color-bg); }
+[hidden] { display: none !important; }
+a:hover { color: var(--color-accent-300); }
+@keyframes riseIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.page {
+  min-height: 100vh; background: var(--color-bg); color: var(--color-text);
+  font-family: var(--font-body); display: flex; justify-content: center;
+  padding: 0 var(--space-4) 64px;
+}
+.shell { width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: var(--space-8); }
+
+.header { padding-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
+.header-brand { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+.header-logo { flex: none; width: 462px; height: 162px; display: block; }
+.header-eyebrow { margin: 0; font-size: 13px; letter-spacing: 0.1em; color: var(--color-accent-500); }
+.header-title { margin: 0; font-size: 34px; }
+.header-lead {
+  margin: 0; font-size: 15px; line-height: 1.55;
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  text-wrap: pretty;
+}
+.header-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+
+.section-label { margin: var(--space-2) 0 0; color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+.list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.my-booking-card { gap: var(--space-2); border: 1px solid var(--color-accent-700); }
+.my-booking-time {
+  font-size: 20px; font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-variant-numeric: tabular-nums;
+}
+
+.slot-row { flex-direction: row; align-items: center; gap: var(--space-4); padding: var(--space-4); }
+.slot-time { display: flex; flex-direction: column; gap: 2px; min-width: 92px; }
+.slot-start {
+  font-size: 20px; font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-variant-numeric: tabular-nums;
+}
+.slot-end {
+  font-size: 11px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+.slot-status { flex: 1; font-size: 13px; }
+.slot-btn { min-height: 44px; padding-inline: var(--space-6); white-space: nowrap; }
+
+.form-wrap { display: flex; flex-direction: column; gap: var(--space-4); animation: riseIn 0.24s ease both; }
+.form-card { gap: var(--space-4); padding: var(--space-6); }
+.form-picked { display: flex; flex-direction: column; gap: var(--space-1); }
+.form-picked-time { margin: 0; font-size: 28px; font-variant-numeric: tabular-nums; }
+.form-error { margin: 0; font-size: 13px; color: var(--color-accent-300); }
+.form-note {
+  margin: 0; font-size: 11.5px; line-height: 1.5;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.confirm-card { gap: var(--space-4); padding: var(--space-6); animation: riseIn 0.24s ease both; }
+.confirm-head { display: flex; align-items: center; gap: var(--space-3); }
+.confirm-check {
+  width: 34px; height: 34px; flex: none; border-radius: 50%;
+  border: 1px solid var(--color-accent); color: var(--color-accent);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.confirm-title { margin: 0; font-size: 26px; }
+.confirm-body { margin: 0; font-size: 14px; line-height: 1.55; color: color-mix(in srgb, var(--color-text) 72%, transparent); }
+.confirm-details {
+  display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider);
+}
+.confirm-row { display: flex; justify-content: space-between; gap: var(--space-4); font-size: 14px; }
+.confirm-row span { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+.confirm-row strong { font-weight: 500; }
+.confirm-row strong.num { font-variant-numeric: tabular-nums; }
+.confirm-row strong.code { font-variant-numeric: tabular-nums; color: var(--color-accent-300); }
+.confirm-actions { display: flex; gap: var(--space-2); }
+.confirm-actions .btn { flex: 1; min-height: 44px; }
+
+.gate-card { gap: var(--space-4); padding: var(--space-6); animation: riseIn 0.24s ease both; }
+.gate-head { display: flex; flex-direction: column; gap: var(--space-1); }
+.gate-title { margin: 0; font-size: 24px; }
+.gate-actions { display: flex; gap: var(--space-2); }
+.gate-actions .btn-primary { flex: 1; min-height: 46px; }
+.gate-actions .btn-ghost { min-height: 46px; }
+
+.admin-wrap { display: flex; flex-direction: column; gap: var(--space-4); }
+.admin-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+.admin-head h6 { margin: 0; color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+.admin-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.admin-code { font-variant-numeric: tabular-nums; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+
+.footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); font-size: 12px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }
