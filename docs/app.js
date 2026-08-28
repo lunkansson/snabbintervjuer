@@ -93,19 +93,6 @@
     await refreshSlots();
   }
 
-  async function cancelBooking() {
-    if (!state.mine || !sb) return;
-    state.busy = true;
-    render();
-    await sb.rpc('cancel_booking', { p_code: state.mine.code, p_slot_id: state.mine.slot });
-    state.busy = false;
-    state.mine = null;
-    saveMine();
-    state.view = 'list';
-    state.name = '';
-    await refreshSlots();
-  }
-
   async function unlockAdmin() {
     if (!sb) {
       state.pwError = 'Bokningssystemet är inte anslutet (saknar Supabase-konfiguration).';
@@ -283,9 +270,6 @@
     document.getElementById('form-back').addEventListener('click', () => { state.view = 'list'; render(); });
     document.getElementById('form-submit').addEventListener('click', submit);
     els['cand-name'].addEventListener('input', (e) => { state.name = e.target.value; state.error = ''; });
-
-    document.getElementById('confirm-change').addEventListener('click', () => { state.view = 'list'; render(); });
-    document.getElementById('confirm-cancel').addEventListener('click', cancelBooking);
 
     els['admin-pw'].addEventListener('input', (e) => { state.pw = e.target.value; state.pwError = ''; });
     els['admin-pw'].addEventListener('keydown', (e) => {
