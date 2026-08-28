@@ -9,8 +9,8 @@
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
   const DAYS = [
-    { key: '0902', full: 'Onsdag 2 september', short: 'Ons 2/9' },
-    { key: '0904', full: 'Fredag 4 september', short: 'Fre 4/9' },
+    { key: '0902', full: 'Onsdag 2 september', short: 'Onsdag 2/9' },
+    { key: '0904', full: 'Fredag 4 september', short: 'Fredag 4/9' },
   ];
 
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
