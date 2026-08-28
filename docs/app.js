@@ -62,7 +62,17 @@
   async function refreshSlots() {
     if (!sb) return;
     const { data, error } = await sb.from('public_slots').select('slot_id');
-    if (!error && data) state.bookedSlotIds = new Set(data.map((r) => r.slot_id));
+    if (!error && data) {
+      state.bookedSlotIds = new Set(data.map((r) => r.slot_id));
+      // The locally-remembered "mine" booking may have been removed by an
+      // admin (or from another device) — drop it once the server no longer
+      // shows that slot as booked, instead of trusting the local cache forever.
+      if (state.mine && !state.bookedSlotIds.has(state.mine.slot)) {
+        state.mine = null;
+        saveMine();
+        if (state.view === 'confirm') state.view = 'list';
+      }
+    }
     render();
   }
 
