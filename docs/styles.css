@@ -270,5 +270,6 @@ a:hover { color: var(--color-accent-300); }
 .admin-head h6 { margin: 0; color: color-mix(in srgb, var(--color-text) 60%, transparent); }
 .admin-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .admin-code { font-variant-numeric: tabular-nums; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+.admin-delete-btn { font-size: 12px; min-height: 32px; padding-inline: var(--space-2); white-space: nowrap; }
 
 .footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); font-size: 12px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }

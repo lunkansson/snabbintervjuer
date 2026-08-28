@@ -39,6 +39,7 @@
     copied: false,
     mine: loadMine(),
     adminData: null, // { [slotId]: { name, code } } — only populated after a correct admin unlock
+    adminPassword: null, // kept in memory only, to re-fetch the admin list after deleting a booking
     busy: false,
   };
 
@@ -93,6 +94,14 @@
     await refreshSlots();
   }
 
+  async function fetchAdminData(password) {
+    const { data, error } = await sb.rpc('get_admin_bookings', { p_password: password });
+    if (error) return null;
+    const map = {};
+    (data || []).forEach((row) => { map[row.slot_id] = { name: row.name, code: row.code }; });
+    return map;
+  }
+
   async function unlockAdmin() {
     if (!sb) {
       state.pwError = 'Bokningssystemet är inte anslutet (saknar Supabase-konfiguration).';
@@ -100,19 +109,31 @@
     }
     state.busy = true;
     render();
-    const { data, error } = await sb.rpc('get_admin_bookings', { p_password: state.pw.trim() });
+    const password = state.pw.trim();
+    const map = await fetchAdminData(password);
     state.busy = false;
-    if (error) {
+    if (!map) {
       state.pwError = 'Fel lösenord.';
       return render();
     }
-    const map = {};
-    (data || []).forEach((row) => { map[row.slot_id] = { name: row.name, code: row.code }; });
     state.adminData = map;
+    state.adminPassword = password;
     state.view = 'admin';
     state.pw = '';
     state.pwError = '';
     render();
+  }
+
+  async function deleteBooking(slotId, code, name) {
+    if (!sb || !state.adminPassword) return;
+    if (!window.confirm('Ta bort bokningen för ' + name + '?')) return;
+    state.busy = true;
+    render();
+    await sb.rpc('cancel_booking', { p_code: code, p_slot_id: slotId });
+    const map = await fetchAdminData(state.adminPassword);
+    state.busy = false;
+    if (map) state.adminData = map;
+    await refreshSlots();
   }
 
   function copyList() {
@@ -259,7 +280,16 @@
       const tdCode = document.createElement('td');
       tdCode.className = 'admin-code';
       tdCode.textContent = b ? b.code : '–';
-      tr.append(tdTime, tdName, tdCode);
+      const tdAction = document.createElement('td');
+      if (b) {
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn btn-ghost admin-delete-btn';
+        delBtn.textContent = 'Ta bort';
+        delBtn.addEventListener('click', () => deleteBooking(d.id, b.code, b.name));
+        tdAction.appendChild(delBtn);
+      }
+      tr.append(tdTime, tdName, tdCode, tdAction);
       els['admin-rows'].appendChild(tr);
     });
     els['admin-copy'].textContent = state.copied ? 'Kopierat ✓' : 'Kopiera listan';
@@ -278,7 +308,7 @@
     document.getElementById('gate-unlock').addEventListener('click', unlockAdmin);
     document.getElementById('gate-cancel').addEventListener('click', () => { state.pw = ''; state.pwError = ''; state.view = 'list'; render(); });
 
-    document.getElementById('admin-back').addEventListener('click', () => { state.view = 'list'; render(); });
+    document.getElementById('admin-back').addEventListener('click', () => { state.view = 'list'; state.adminPassword = null; render(); });
     els['admin-copy'].addEventListener('click', copyList);
 
     document.getElementById('footer-admin').addEventListener('click', () => { state.pw = ''; state.pwError = ''; state.view = 'gate'; render(); });
