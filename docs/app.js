@@ -1,16 +1,15 @@
 (() => {
   'use strict';
 
-  // ---- schedule (09.00–12.00, 15 min interviews, 15 min gap → 6 slots/day) ----
+  // ---- schedule (15 min interviews, 15 min gap; each day sets its own end) ----
   const SLOT_MINUTES = 15;
   const BUFFER_MINUTES = 15;
   const START = 9 * 60;
-  const END = 12 * 60;
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
   const DAYS = [
-    { key: '0902', full: 'Onsdag 2 september', short: 'Onsdag 2/9' },
-    { key: '0904', full: 'Fredag 4 september', short: 'Fredag 4/9' },
+    { key: '0902', full: 'Onsdag 2 september', short: 'Onsdag 2/9', end: 12 * 60 + 45 }, // extra 12.00 + 12.30 slots
+    { key: '0904', full: 'Fredag 4 september', short: 'Fredag 4/9', end: 12 * 60 },
   ];
 
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
@@ -18,7 +17,7 @@
 
   function buildDaySlots(day) {
     const out = [];
-    for (let t = START; t + SLOT_MINUTES <= END; t += SLOT_MINUTES + BUFFER_MINUTES) {
+    for (let t = START; t + SLOT_MINUTES <= day.end; t += SLOT_MINUTES + BUFFER_MINUTES) {
       out.push({ id: day.key + '-s' + t, day: day.key, start: hhmm(t), end: hhmm(t + SLOT_MINUTES) });
     }
     return out;
@@ -171,7 +170,7 @@
   const els = {};
   function cacheEls() {
     ['view-list', 'view-form', 'view-confirm', 'view-gate', 'view-admin',
-      'day-seg', 'date-tag', 'free-tag', 'my-booking-slot', 'slots',
+      'day-seg', 'date-tag', 'window-tag', 'free-tag', 'my-booking-slot', 'slots',
       'form-picked-time', 'form-submit-time', 'cand-name', 'form-error',
       'confirm-time', 'confirm-name', 'confirm-code',
       'admin-pw', 'gate-error',
@@ -204,7 +203,9 @@
     });
     els['day-seg'].hidden = state.view !== 'list';
 
-    els['date-tag'].textContent = DAYS.find((d) => d.key === state.day).full;
+    const activeDay = DAYS.find((d) => d.key === state.day);
+    els['date-tag'].textContent = activeDay.full;
+    els['window-tag'].textContent = hhmm(START) + ' – ' + hhmm(activeDay.end);
     const free = currentSlots().filter((d) => !state.bookedSlotIds.has(d.id)).length;
     els['free-tag'].textContent = free === 0 ? 'Alla tider bokade' : free === 1 ? '1 tid kvar' : free + ' tider kvar';
 
