@@ -8,7 +8,7 @@
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
   const DAYS = [
-    { key: '0918', full: 'Fredag 18 september', short: 'Fredag 18/9', end: 12 * 60 },
+    { key: '0918', full: 'Fredag 18 september', short: 'Fredag 18/9', end: 12 * 60 + 15 }, // adds a 12.00 slot
   ];
 
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
