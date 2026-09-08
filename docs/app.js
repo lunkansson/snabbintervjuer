@@ -8,8 +8,7 @@
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
   const DAYS = [
-    { key: '0902', full: 'Onsdag 2 september', short: 'Onsdag 2/9', end: 12 * 60 + 45 }, // extra 12.00 + 12.30 slots
-    { key: '0904', full: 'Fredag 4 september', short: 'Fredag 4/9', end: 12 * 60 },
+    { key: '0918', full: 'Fredag 18 september', short: 'Fredag 18/9', end: 12 * 60 },
   ];
 
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
@@ -201,7 +200,7 @@
     ['list', 'form', 'confirm', 'gate', 'admin'].forEach((v) => {
       els['view-' + v].hidden = state.view !== v;
     });
-    els['day-seg'].hidden = state.view !== 'list';
+    els['day-seg'].hidden = state.view !== 'list' || DAYS.length <= 1;
 
     const activeDay = DAYS.find((d) => d.key === state.day);
     els['date-tag'].textContent = activeDay.full;

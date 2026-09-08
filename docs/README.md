@@ -5,10 +5,10 @@ Real implementation of the `Speeddating Booking.dc.html` design from `project/`
 for the full design intent). Static HTML/CSS/JS front end, Supabase for
 shared, race-safe storage.
 
-Schedule: Fredag 4 september, 09.00–12.00, 15-minuters intervjuer med 15
+Schedule: Fredag 18 september, 09.00–12.00, 15-minuters intervjuer med 15
 minuters lucka mellan varje → 6 tider (`app.js`, top of file — change
-`SLOT_MINUTES`/`BUFFER_MINUTES`/`START`/`END` there if the morning changes
-shape).
+`SLOT_MINUTES`/`BUFFER_MINUTES`/`START`, or add/edit entries in the `DAYS`
+array, if the morning changes shape or another date is added).
 
 ## What's here
 
