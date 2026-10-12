@@ -9,7 +9,7 @@
 
   const DAYS = [
     { key: '1021', full: 'Onsdag 21 oktober', short: 'Onsdag 21/10', end: 11 * 60 + 15 }, // adds an 11.00 slot
-    { key: '1109', full: 'Måndag 9 november', short: 'Måndag 9/11', end: 11 * 60 + 15 },
+    { key: '1109', full: 'Måndag 9 november', short: 'Måndag 9/11', start: 9 * 60 + 30, end: 11 * 60 + 15 }, // no 09.00 slot
     { key: '1113', full: 'Fredag 13 november', short: 'Fredag 13/11', end: 11 * 60 + 15 },
   ];
 
@@ -18,7 +18,7 @@
 
   function buildDaySlots(day) {
     const out = [];
-    for (let t = START; t + SLOT_MINUTES <= day.end; t += SLOT_MINUTES + BUFFER_MINUTES) {
+    for (let t = day.start ?? START; t + SLOT_MINUTES <= day.end; t += SLOT_MINUTES + BUFFER_MINUTES) {
       out.push({ id: day.key + '-s' + t, day: day.key, start: hhmm(t), end: hhmm(t + SLOT_MINUTES) });
     }
     return out;
@@ -206,7 +206,7 @@
 
     const activeDay = DAYS.find((d) => d.key === state.day);
     els['date-tag'].textContent = activeDay.full;
-    els['window-tag'].textContent = hhmm(START) + ' – ' + hhmm(activeDay.end);
+    els['window-tag'].textContent = hhmm(activeDay.start ?? START) + ' – ' + hhmm(activeDay.end);
     const free = currentSlots().filter((d) => !state.bookedSlotIds.has(d.id)).length;
     els['free-tag'].textContent = free === 0 ? 'Alla tider bokade' : free === 1 ? '1 tid kvar' : free + ' tider kvar';
 
