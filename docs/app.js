@@ -9,6 +9,8 @@
 
   const DAYS = [
     { key: '1021', full: 'Onsdag 21 oktober', short: 'Onsdag 21/10', end: 11 * 60 + 15 }, // adds an 11.00 slot
+    { key: '1109', full: 'Måndag 9 november', short: 'Måndag 9/11', end: 11 * 60 + 15 },
+    { key: '1113', full: 'Fredag 13 november', short: 'Fredag 13/11', end: 11 * 60 + 15 },
   ];
 
   const pad = (n) => (n < 10 ? '0' + n : '' + n);
