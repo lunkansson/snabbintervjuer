@@ -102,7 +102,7 @@
     if (error) {
       state.error = (error.message || '').includes('slot_taken')
         ? 'Någon hann före på den tiden – välj en annan.'
-        : 'Något gick fel – försök igen.';
+        : 'Något gick fel – försök igen. (' + (error.message || error.code || 'okänt fel') + ')';
       await refreshSlots();
       return render();
     }
