@@ -8,7 +8,6 @@
   const LOCAL_KEY = 'nexer-speeddating-mine';
 
   const DAYS = [
-    { key: '1113', full: 'Fredag 13 november', short: 'Fredag 13/11', end: 11 * 60 + 15 },
     { key: '1123', full: 'Måndag 23 november', short: 'Måndag 23/11', start: 9 * 60 + 30, end: 11 * 60 + 45 },
     { key: '1130', full: 'Måndag 30 november', short: 'Måndag 30/11', start: 13 * 60, end: 15 * 60 + 15 },
   ];
